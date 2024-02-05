@@ -77,12 +77,23 @@ public class Board extends javax.swing.JPanel {
     }
     
     public boolean canMove(Shape shape, int row, int col) {
-        
+        if(col + shape.getMinX() < 0) {
+            return false;
+        }
+        if (col + shape.getMaxX() >= NUM_COLS) {
+            return false;
+        }
+        if (row + shape.getMaxY() >= NUM_ROWS) {
+            return false;
+        }
+        return true;
     }
     
     public void tick() {
-        currentRow++;
-        repaint();
+        if (canMove(currentSheap, currentRow + 1, currentCol)) {
+            currentRow++;
+            repaint();
+        }
     }
 
     /**
