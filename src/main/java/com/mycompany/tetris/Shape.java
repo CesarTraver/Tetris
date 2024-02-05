@@ -26,7 +26,25 @@ public class Shape {
     public Shape() {
         int randomShape = (int) Math.random() * 7 + 1;
         pieceShape = Tetrominoes.values()[randomShape];
-        coordinates = coordsTable[randomShape];
+        //coordinates = coordsTable[randomShape];
+        coordinates = new int [4][2];
+        for (int i = 0; i < coordinates.length; i++) {
+            for (int j = 0; j < coordinates[0].length; j++) {
+                coordinates[i][j] = coordsTable[randomShape][i][j];
+            }
+        }
+    }
+    
+    public int getX(int index) {
+        return coordinates[index][0];
+    }
+    
+    public int getY(int index) {
+        return coordinates[index][1];
+    }
+    
+    public Tetrominoes getShape() {
+        return pieceShape;
     }
 }
 

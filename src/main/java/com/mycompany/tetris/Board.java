@@ -4,17 +4,85 @@
  */
 package com.mycompany.tetris;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import javax.swing.Timer;
+
 /**
  *
  * @author alu10720810
  */
 public class Board extends javax.swing.JPanel {
+    
+    class MyKeyAdapter extends KeyAdapter {
+    @Override
+    public void keyPressed(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_LEFT:
+                if (canMove(currentSheap, currentRow, currentCol - 1)) {
+                    currentCol--;
+                }
+                currentCol--;
+                break;
+            case KeyEvent.VK_RIGHT:
+                if (canMove(currentSheap, currentRow, currentCol + 1)) {
+                    currentCol++;
+                }
+                break;
+            case KeyEvent.VK_UP:
+            // whatever
+                break;
+            case KeyEvent.VK_DOWN:
+            // whatever
+                break;
+            default:
+                break;
+        }
+        repaint();
+    }
+}
+    
+    public static final int NUM_ROWS = 22;
+    public static final int NUM_COLS = 10;
+    public static final int DELTA_TIME = 500; //Milliseconds = ms
+    
+    private Shape currentSheap;
+    private int currentRow;
+    private int currentCol;
+    private Timer timer;
+    private MyKeyAdapter keyAdapter;
 
     /**
      * Creates new form Board
      */
     public Board() {
         initComponents();
+        currentSheap = new Shape();
+        currentRow = 0;
+        currentCol = NUM_COLS / 2;
+        keyAdapter = new MyKeyAdapter();
+        addKeyListener(keyAdapter);
+        setFocusable(true);
+        timer = new Timer(DELTA_TIME, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                tick();
+            }
+        });
+        timer.start();
+    }
+    
+    public boolean canMove(Shape shape, int row, int col) {
+        
+    }
+    
+    public void tick() {
+        currentRow++;
+        repaint();
     }
 
     /**
@@ -38,7 +106,60 @@ public class Board extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            paintCurrentShape(g);
+        }
+        
+        private void paintCurrentShape(Graphics g) {
+            for (int i = 0; i < 4; i++) {
+                if (currentSheap.getY(i) + currentRow >= 0) {
+                 drawSquare(g, currentRow + currentSheap.getY(i), currentCol + currentSheap.getX(i), 
+                         currentSheap.getShape());
+                }
+            }
+        }
+        
+        
+        private void drawSquare(Graphics g, int row, int col,
+        Tetrominoes shape) {
+            Color colors[] = { new Color(0, 0, 0),
+            new Color(204, 102, 102),
+            new Color(102, 204, 102), new Color(102, 102, 204),
+            new Color(204, 204, 102), new Color(204, 102, 204),
+            new Color(102, 204, 204), new Color(218, 170, 0)
+            };
+            int x = col * getSquareWidth();
+            int y = row * getSquareHeight();
+            Color color = colors[shape.ordinal()];
+            g.setColor(color);
+            g.fillRect(x + 1, y + 1, getSquareWidth() - 2,
+            getSquareHeight() - 2);
+            g.setColor(color.brighter());
+            g.drawLine(x, y + getSquareHeight() - 1, x, y);
+            g.drawLine(x, y, x + getSquareWidth() - 1, y);
+            g.setColor(color.darker());
+            g.drawLine(x + 1, y + getSquareHeight() - 1,
+            x + getSquareWidth() - 1, y + getSquareHeight() - 1);
+            g.drawLine(x + getSquareWidth() - 1,
+            y + getSquareHeight() - 1,
+            x + getSquareWidth() - 1, y + 1);
+        }
+    
+    private int getSquareWidth() {
+        return getWidth() / NUM_COLS;
+    }
+    
+    private int getSquareHeight() {
+        return getHeight() / NUM_ROWS;
+    }
+
+
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 }
+
+

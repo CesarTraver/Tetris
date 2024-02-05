@@ -26,7 +26,39 @@ public class Tetris extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        scoreBoard1 = new com.mycompany.tetris.ScoreBoard();
+        board1 = new com.mycompany.tetris.Board();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        scoreBoard1.setBackground(new java.awt.Color(51, 255, 51));
+        scoreBoard1.setPreferredSize(new java.awt.Dimension(149, 40));
+
+        javax.swing.GroupLayout scoreBoard1Layout = new javax.swing.GroupLayout(scoreBoard1);
+        scoreBoard1.setLayout(scoreBoard1Layout);
+        scoreBoard1Layout.setHorizontalGroup(
+            scoreBoard1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 150, Short.MAX_VALUE)
+        );
+        scoreBoard1Layout.setVerticalGroup(
+            scoreBoard1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 40, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(scoreBoard1, java.awt.BorderLayout.PAGE_END);
+
+        javax.swing.GroupLayout board1Layout = new javax.swing.GroupLayout(board1);
+        board1.setLayout(board1Layout);
+        board1Layout.setHorizontalGroup(
+            board1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 150, Short.MAX_VALUE)
+        );
+        board1Layout.setVerticalGroup(
+            board1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 260, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(board1, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -67,5 +99,7 @@ public class Tetris extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.mycompany.tetris.Board board1;
+    private com.mycompany.tetris.ScoreBoard scoreBoard1;
     // End of variables declaration//GEN-END:variables
 }
