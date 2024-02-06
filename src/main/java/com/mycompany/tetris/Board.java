@@ -4,8 +4,11 @@
  */
 package com.mycompany.tetris;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -55,15 +58,15 @@ public class Board extends javax.swing.JPanel {
     private int currentCol;
     private Timer timer;
     private MyKeyAdapter keyAdapter;
+    private Tetrominoes[][] matrix;
 
     /**
      * Creates new form Board
      */
     public Board() {
         initComponents();
-        currentSheap = new Shape();
-        currentRow = 0;
-        currentCol = NUM_COLS / 2;
+        initMatrix();
+        createNewCurrentShape();
         keyAdapter = new MyKeyAdapter();
         addKeyListener(keyAdapter);
         setFocusable(true);
@@ -76,6 +79,16 @@ public class Board extends javax.swing.JPanel {
         timer.start();
     }
     
+    public void initMatrix() {
+        matrix = new Tetrominoes[NUM_ROWS][NUM_COLS];
+        for (int row = 0; row < matrix.length; row++) {
+            for (int col = 0; col < matrix[0].length; col++) {
+                matrix[row][col] = Tetrominoes.NoShape;
+            }
+            
+        }
+    }
+    
     public boolean canMove(Shape shape, int row, int col) {
         if(col + shape.getMinX() < 0) {
             return false;
@@ -86,14 +99,47 @@ public class Board extends javax.swing.JPanel {
         if (row + shape.getMaxY() >= NUM_ROWS) {
             return false;
         }
+        if (shapeHitsMatrix(shape, row, col)) {
+            return false;
+        }
         return true;
+    }
+    
+    public boolean shapeHitsMatrix(Shape shape, int row, int col) {
+        for (int i = 0; i < 4; i++) {
+            int rr = row + shape.getY(i);
+            int cc = col + shape.getX(i);
+            if (rr >= 0) {
+                if (matrix[rr][cc] != Tetrominoes.NoShape) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     
     public void tick() {
         if (canMove(currentSheap, currentRow + 1, currentCol)) {
             currentRow++;
             repaint();
+        } else {
+            copyCurrentShapeToMatrix();
+            createNewCurrentShape();
         }
+    }
+    
+    public void copyCurrentShapeToMatrix() {
+        for (int i = 0; i < 4; i++) {
+            int row = currentRow + currentSheap.getY(i);
+            int col = currentCol + currentSheap.getX(i);
+            matrix[row][col] = currentSheap.getShape();
+        }
+    }
+    
+    private void createNewCurrentShape() {
+        currentSheap = new Shape();
+        currentRow = 0;
+        currentCol = NUM_COLS / 2;
     }
 
     /**
@@ -105,22 +151,32 @@ public class Board extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        setLayout(null);
     }// </editor-fold>//GEN-END:initComponents
 
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
+            paintBorder(g);
+            paintMatrix(g);
             paintCurrentShape(g);
+        }
+        
+        public void paintMatrix(Graphics g) {
+            for (int row = 0; row < NUM_ROWS; row++) {
+                for (int col = 0; col < NUM_COLS; col++) {
+                    drawSquare(g, row, col, matrix[row][col]);
+                }
+                
+            }
+        }
+        
+        public void paintBorder(Graphics g) {
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setColor(Color.BLACK);
+            BasicStroke bs = new BasicStroke(1);
+            g2d.setStroke(bs);
+            g2d.drawRect(0, 0, (NUM_COLS * getSquareWidth()) - 2, (NUM_ROWS * getSquareHeight()) - 2);
         }
         
         private void paintCurrentShape(Graphics g) {
