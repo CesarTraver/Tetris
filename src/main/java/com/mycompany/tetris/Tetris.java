@@ -3,6 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.tetris;
+import java.io.File;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 
 /**
  *
@@ -15,6 +19,18 @@ public class Tetris extends javax.swing.JFrame {
      */
     public Tetris() {
         initComponents();
+        reproducirSonido("/home/INFORMATICA/alu10720810/NetBeansProjects/Tetris/tetrissong.wav");
+    }
+    
+    public static void reproducirSonido(String ruta) {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(ruta).getAbsoluteFile());
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
+        } catch (Exception ex) {
+            System.out.println("Error al reproducir el sonido: " + ex.getMessage());
+        }
     }
 
     /**
@@ -38,7 +54,7 @@ public class Tetris extends javax.swing.JFrame {
         scoreBoard1.setLayout(scoreBoard1Layout);
         scoreBoard1Layout.setHorizontalGroup(
             scoreBoard1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 150, Short.MAX_VALUE)
+            .addGap(0, 136, Short.MAX_VALUE)
         );
         scoreBoard1Layout.setVerticalGroup(
             scoreBoard1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -47,15 +63,17 @@ public class Tetris extends javax.swing.JFrame {
 
         getContentPane().add(scoreBoard1, java.awt.BorderLayout.PAGE_END);
 
+        board1.setPreferredSize(new java.awt.Dimension(136, 300));
+
         javax.swing.GroupLayout board1Layout = new javax.swing.GroupLayout(board1);
         board1.setLayout(board1Layout);
         board1Layout.setHorizontalGroup(
             board1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 150, Short.MAX_VALUE)
+            .addGap(0, 136, Short.MAX_VALUE)
         );
         board1Layout.setVerticalGroup(
             board1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 260, Short.MAX_VALUE)
+            .addGap(0, 264, Short.MAX_VALUE)
         );
 
         getContentPane().add(board1, java.awt.BorderLayout.CENTER);
