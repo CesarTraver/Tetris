@@ -19,7 +19,7 @@ public class Tetris extends javax.swing.JFrame {
      */
     public Tetris() {
         initComponents();
-        reproducirSonido("/home/INFORMATICA/alu10720810/NetBeansProjects/Tetris/tetrissong.wav");
+        reproducirSonido("src/main/resources/sound/tetrissong.wav");
     }
     
     public static void reproducirSonido(String ruta) {

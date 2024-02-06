@@ -29,7 +29,6 @@ public class Board extends javax.swing.JPanel {
                 if (canMove(currentSheap, currentRow, currentCol - 1)) {
                     currentCol--;
                 }
-                currentCol--;
                 break;
             case KeyEvent.VK_RIGHT:
                 if (canMove(currentSheap, currentRow, currentCol + 1)) {
