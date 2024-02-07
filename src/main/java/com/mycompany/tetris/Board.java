@@ -138,15 +138,33 @@ public class Board extends javax.swing.JPanel {
     }
     
     public void deleteRow(int row) {
-        
+        if (isRowCompleted(row)) {
+            for (int i = row; i > 0; i--) {
+                for (int j = 0; j < NUM_COLS; j++) {
+                    matrix[i][j] = matrix[i - 1][j];
+                }
+            }
+            for (int i = 0; i < NUM_COLS; i++) {
+                matrix[0][i] = Tetrominoes.NoShape;
+            }
+        }
     }
     
     public void checkCompletedRows() {
-        
+        for (int row = 0; row < matrix.length; row++) {
+                if (isRowCompleted(row)) {
+                    deleteRow(row);
+                }
+            }
     }
     
-    public void isRowCompleted(int row) {
-        
+    public boolean isRowCompleted(int row) {
+        for (int col = 0; col < NUM_COLS; col++) {
+            if (matrix[row][col] == Tetrominoes.NoShape) {
+                return false;
+            }
+        }
+        return true;
     }
     
     public void copyCurrentShapeToMatrix() {
