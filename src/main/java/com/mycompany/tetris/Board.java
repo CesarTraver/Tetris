@@ -36,10 +36,16 @@ public class Board extends javax.swing.JPanel {
                 }
                 break;
             case KeyEvent.VK_UP:
-            // whatever
+                Shape newShape = currentSheap.getCopy();
+                newShape.rotareRight();
+                if (!shapeHitsMatrix(newShape, currentRow, currentCol)) {
+                    currentSheap = newShape;
+                }
                 break;
             case KeyEvent.VK_DOWN:
-            // whatever
+                if (canMove(currentSheap, currentRow + 1, currentCol)) {
+                    currentRow++;
+                }
                 break;
             default:
                 break;
@@ -108,6 +114,9 @@ public class Board extends javax.swing.JPanel {
         for (int i = 0; i < 4; i++) {
             int rr = row + shape.getY(i);
             int cc = col + shape.getX(i);
+            if (cc < 0 || cc >= NUM_COLS) {
+                return true;
+            }
             if (rr >= 0) {
                 if (matrix[rr][cc] != Tetrominoes.NoShape) {
                     return true;
@@ -123,8 +132,21 @@ public class Board extends javax.swing.JPanel {
             repaint();
         } else {
             copyCurrentShapeToMatrix();
+            checkCompletedRows();
             createNewCurrentShape();
         }
+    }
+    
+    public void deleteRow(int row) {
+        
+    }
+    
+    public void checkCompletedRows() {
+        
+    }
+    
+    public void isRowCompleted(int row) {
+        
     }
     
     public void copyCurrentShapeToMatrix() {

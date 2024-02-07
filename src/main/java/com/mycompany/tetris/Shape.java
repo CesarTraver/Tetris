@@ -35,6 +35,29 @@ public class Shape {
         }
     }
     
+    public Shape getCopy() {
+        Shape newShape = new Shape();
+        newShape.pieceShape = pieceShape;
+        for (int i = 0; i < 4; i++) {
+            newShape.coordinates[i][0] = coordinates[i][0];
+            newShape.coordinates[i][1] = coordinates[i][1];
+        }
+        return newShape;
+    }
+    
+    public void rotareRight() {
+        if (pieceShape == Tetrominoes.SquareShape) {
+            return;
+        }
+        for (int i = 0; i < 4; i++) {
+            int temp = coordinates[i][0];
+            coordinates[i][0] = -coordinates[i][1];
+            coordinates[i][1] = temp;
+        }
+    }
+        
+    
+    
     public int getX(int index) {
         return coordinates[index][0];
     }
