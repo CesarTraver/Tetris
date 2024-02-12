@@ -8,11 +8,13 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 /**
@@ -43,9 +45,10 @@ public class Board extends javax.swing.JPanel {
                 }
                 break;
             case KeyEvent.VK_DOWN:
-                if (canMove(currentSheap, currentRow + 1, currentCol)) {
+                /*if (canMove(currentSheap, currentRow, currentCol - 1)) {
                     currentRow++;
-                }
+                }*/
+                dropShape();
                 break;
             default:
                 break;
@@ -64,6 +67,7 @@ public class Board extends javax.swing.JPanel {
     private Timer timer;
     private MyKeyAdapter keyAdapter;
     private Tetrominoes[][] matrix;
+    private ScoreInterface score;
 
     /**
      * Creates new form Board
@@ -110,6 +114,10 @@ public class Board extends javax.swing.JPanel {
         return true;
     }
     
+        public void setScoreInterface(ScoreInterface scoreInterface) {
+        this.score = scoreInterface;
+    }
+    
     public boolean shapeHitsMatrix(Shape shape, int row, int col) {
         for (int i = 0; i < 4; i++) {
             int rr = row + shape.getY(i);
@@ -126,14 +134,30 @@ public class Board extends javax.swing.JPanel {
         return false;
     }
     
+    public void dropShape() {
+        int row = currentRow;
+        while (canMove(currentSheap, row + 1, currentCol)) {
+            row ++;
+        }
+        currentRow = row;
+    }
+    
     public void tick() {
-        if (canMove(currentSheap, currentRow + 1, currentCol)) {
+        if (shapeHitsMatrix(currentSheap, 0, currentCol)) {
+            repaint();
+            processGameOver();
+            return;
+        }
+        if (KeyEvent.VK_SPACE != 1) {
+            if (canMove(currentSheap, currentRow + 1, currentCol)) {
             currentRow++;
             repaint();
         } else {
             copyCurrentShapeToMatrix();
             checkCompletedRows();
             createNewCurrentShape();
+        }
+        
         }
     }
     
@@ -179,6 +203,53 @@ public class Board extends javax.swing.JPanel {
         currentSheap = new Shape();
         currentRow = 0;
         currentCol = NUM_COLS / 2;
+    }
+    
+    private void processGameOver() {
+        timer.stop();
+        removeKeyListener(keyAdapter);
+        currentSheap = null;
+        fillmatrixWithGameOver();
+    }
+    
+    private void  fillmatrixWithGameOver() {
+        int rowGO = 0;
+        int colGO = 0;
+        
+        timerGO = new Timer(20, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                @Override
+                matrix[rowGO][colGO] = Tetrominoes.LineShape;
+                colGO++;
+                if (colGO >= NUM_COLS) {
+                    colGO = 0;
+                    rowGO++;
+                }
+                if (rowGo >= NUM_ROWS) {
+                    timerGO.stop();
+                }
+            }
+        });
+        /*currentSheap = null;
+        for (int row = 0; row < NUM_ROWS; row++) {
+            for (int col = 0; col < NUM_COLS; col++) {
+                try {
+                    matrix[row][col] = Tetrominoes.LineShape;
+                    Thread.sleep(50);
+                    repaint();
+                } catch (InterruptedException ex) {
+
+                }
+            }
+            
+        }*/
+    }
+    
+    public void initGame() {
+        createNewCurrentShape();
+        int deltaTime = ConfigData.getInstance().getDeltaTime();
+        
     }
 
     /**
